@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "src/user/user.entity";
-import { UserService } from "src/user/user.service";
+import { User } from "../user/user.entity";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     return await this.userService.findUserByEmail(userEmail);
   }
 
-  async createUser(user: Partial<User>): Promise<any> {
+  async createUser(user: User): Promise<any> {
     return await this.userService.createUser(user);
   }
 

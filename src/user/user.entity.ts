@@ -1,5 +1,5 @@
-import { Common } from "src/common/common.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Common } from "../common/common.entity";
 import { Gender } from "./gender.entity";
 
 @Entity({ name: "users" })
@@ -45,9 +45,16 @@ export class User extends Common {
   socialId: string;
 
   @Column()
-  provide: string;
+  provider: string;
 
   @ManyToOne(() => Gender)
   @JoinColumn({ name: "gender_id" })
   gender: Gender;
+
+  constructor(email: string, provider: string, socialId: string) {
+    super();
+    this.email = email;
+    this.provider = provider;
+    this.socialId = socialId;
+  }
 }

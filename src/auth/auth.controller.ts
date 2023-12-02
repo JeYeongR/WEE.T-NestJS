@@ -7,9 +7,9 @@ export class AuthController {
   @UseGuards(AuthGuard("naver"))
   @Get("/naver/login")
   naverLogin(@Req() req): ResponseLoginDto {
-    const { accessToken, isNew } = req.user;
+    const { accessTokenInLocal, isNew }: Authentication = req.user;
 
-    return ResponseLoginDto.of(accessToken, isNew);
+    return ResponseLoginDto.of(accessTokenInLocal, isNew);
   }
 
   /**
@@ -18,4 +18,9 @@ export class AuthController {
   @UseGuards(AuthGuard("naver"))
   @Get("/naver")
   naverLoginCallback(): void {}
+}
+
+interface Authentication {
+  accessTokenInLocal: string;
+  isNew: boolean;
 }
