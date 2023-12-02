@@ -10,11 +10,17 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findUserByEmail(userEmail: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email: userEmail });
+  async createUserBySocial(email: string, provider: string, socialId: string): Promise<User> {
+    const user: User = this.userRepository.create({
+      email,
+      provider,
+      socialId,
+    });
+
+    return await this.userRepository.save(user);
   }
 
-  async createUser(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+  async findUserByEmail(userEmail: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ email: userEmail });
   }
 }

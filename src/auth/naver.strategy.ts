@@ -2,11 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-naver";
 import { User } from "src/user/user.entity";
+import { UserService } from "../user/user.service";
 import { AuthService } from "./auth.service";
 
 @Injectable()
 export class NaverStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {
     super({
       clientID: process.env.NAVER_CLIENT_ID,
       clientSecret: process.env.NAVER_CLIENT_SECRET,
@@ -18,12 +22,11 @@ export class NaverStrategy extends PassportStrategy(Strategy) {
     const email: string = profile.emails[0].value;
     const provider: string = profile.provider;
     const socialId: string = profile.id;
-    const userProfile: User = new User(email, provider, socialId);
 
-    let existingUser: User = await this.authService.validateUser(email);
+    let existingUser: User = await this.userService.findUserByEmail(email);
 
     if (!existingUser) {
-      existingUser = await this.authService.createUser(userProfile);
+      existingUser = await this.userService.createUserBySocial(email, provider, socialId);
     }
 
     const id: number = existingUser.id;

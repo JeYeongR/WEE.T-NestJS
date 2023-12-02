@@ -50,11 +50,4 @@ export class User extends Common {
   @ManyToOne(() => Gender)
   @JoinColumn({ name: "gender_id" })
   gender: Gender;
-
-  constructor(email: string, provider: string, socialId: string) {
-    super();
-    this.email = email;
-    this.provider = provider;
-    this.socialId = socialId;
-  }
 }
