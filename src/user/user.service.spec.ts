@@ -37,7 +37,7 @@ describe("UserService", () => {
     provider,
     socialId,
   };
-  const mockedUser: User = {
+  const mockedUser: Partial<User> = {
     email,
     socialId,
     provider,
@@ -50,7 +50,6 @@ describe("UserService", () => {
     createdAt: new Date("2023-12-02T12:54:59.566Z"),
     updatedAt: new Date("2023-12-02T12:54:59.566Z"),
     id: 1,
-    gender: null,
   };
 
   it("should be defined", () => {
