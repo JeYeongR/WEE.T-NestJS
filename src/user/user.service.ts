@@ -20,7 +20,10 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async findUserByEmail(userEmail: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email: userEmail });
+  async findUserByEmailAndProvider(email: string, provider: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({
+      email,
+      provider,
+    });
   }
 }

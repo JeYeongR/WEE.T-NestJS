@@ -23,7 +23,7 @@ export class NaverStrategy extends PassportStrategy(Strategy) {
     const provider: string = profile.provider;
     const socialId: string = profile.id;
 
-    let existingUser: User = await this.userService.findUserByEmail(email);
+    let existingUser: User = await this.userService.findUserByEmailAndProvider(email, provider);
 
     if (!existingUser) {
       existingUser = await this.userService.createUserBySocial(email, provider, socialId);
