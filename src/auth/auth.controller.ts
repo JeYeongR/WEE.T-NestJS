@@ -15,9 +15,11 @@ export class AuthController {
   /**
    * Test 용 API
    */
-  @UseGuards(AuthGuard("naver"))
-  @Get("/naver")
-  naverLoginCallback(): void {}
+  // @UseGuards(AuthGuard("naver"))
+  // @Get("/naver")
+  // naverLoginCallback(): void {
+  //   return;
+  // }
 }
 
 interface Authentication {

@@ -20,7 +20,7 @@ describe("AuthService", () => {
       ],
     }).compile();
 
-    authService = module.get(AuthService);
+    authService = module.get<AuthService>(AuthService);
   });
 
   const id: number = 1;
@@ -40,7 +40,7 @@ describe("AuthService", () => {
   });
 
   describe("createToken()", () => {
-    it("should be created user", async () => {
+    it("should be created token", async () => {
       // Given
       const spySignAsyncFn = jest.spyOn(mockJwtService, "signAsync");
       spySignAsyncFn.mockResolvedValue(accessToken);
