@@ -75,18 +75,18 @@ describe("UserService", () => {
     });
   });
 
-  describe("findUserByEmail()", () => {
+  describe("findUserByEmailAndProvider()", () => {
     it("should be found user", async () => {
       // Given
       userRepository.findOneBy.mockResolvedValue(mockedUser);
 
       // When
-      const result = await userService.findUserByEmail(email);
+      const result = await userService.findUserByEmailAndProvider(email, provider);
 
       // Then
       expect(result).toEqual(mockedUser);
       expect(userRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email: email });
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email, provider });
     });
 
     it("should not be found user", async () => {
@@ -94,12 +94,12 @@ describe("UserService", () => {
       userRepository.findOneBy.mockResolvedValue(null);
 
       // When
-      const result = await userService.findUserByEmail(email);
+      const result = await userService.findUserByEmailAndProvider(email, provider);
 
       // Then
       expect(result).toBeNull();
       expect(userRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email: email });
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email, provider });
     });
   });
 });
