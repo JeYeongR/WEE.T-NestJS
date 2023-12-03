@@ -10,10 +10,11 @@ export class AuthService {
       id,
       isNew,
     };
-
-    return await this.jwtService.signAsync(payload, {
+    const options = {
       secret: process.env.SECRET_KEY,
       expiresIn: "1h",
-    });
+    };
+
+    return await this.jwtService.signAsync(payload, options);
   }
 }
