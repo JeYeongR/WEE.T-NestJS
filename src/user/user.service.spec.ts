@@ -1,14 +1,16 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
-
 describe("UserService", () => {
   let userService: UserService;
-  let userRepository: MockRepository<User>;
+
+  const mockUserRepository = {
+    findOneBy: jest.fn(),
+    save: jest.fn(),
+    create: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,17 +18,16 @@ describe("UserService", () => {
         UserService,
         {
           provide: getRepositoryToken(User),
-          useValue: {
-            findOneBy: jest.fn(),
-            save: jest.fn(),
-            create: jest.fn(),
-          },
+          useValue: mockUserRepository,
         },
       ],
     }).compile();
 
-    userService = module.get(UserService);
-    userRepository = module.get(getRepositoryToken(User));
+    userService = module.get<UserService>(UserService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   const email: string = "test@test.com";
@@ -54,52 +55,55 @@ describe("UserService", () => {
 
   it("should be defined", () => {
     expect(userService).toBeDefined();
-    expect(userRepository).toBeDefined();
   });
 
   describe("createUserBySocial()", () => {
     it("should be created user", async () => {
       // Given
-      userRepository.create.mockReturnValue(user);
-      userRepository.save.mockResolvedValue(mockedUser);
+      const spyCreateFn = jest.spyOn(mockUserRepository, "create");
+      spyCreateFn.mockReturnValue(user);
+      const spySaveFn = jest.spyOn(mockUserRepository, "save");
+      spySaveFn.mockResolvedValue(mockedUser);
 
       // When
       const result = await userService.createUserBySocial(email, provider, socialId);
 
       // Then
       expect(result).toEqual(mockedUser);
-      expect(userRepository.create).toHaveBeenCalledTimes(1);
-      expect(userRepository.create).toHaveBeenCalledWith({ email, provider, socialId });
-      expect(userRepository.save).toHaveBeenCalledTimes(1);
-      expect(userRepository.save).toHaveBeenCalledWith(user);
+      expect(spyCreateFn).toHaveBeenCalledTimes(1);
+      expect(spyCreateFn).toHaveBeenCalledWith({ email, provider, socialId });
+      expect(spySaveFn).toHaveBeenCalledTimes(1);
+      expect(spySaveFn).toHaveBeenCalledWith(user);
     });
   });
 
   describe("findUserByEmailAndProvider()", () => {
     it("should be found user", async () => {
       // Given
-      userRepository.findOneBy.mockResolvedValue(mockedUser);
+      const spyFindOneByFn = jest.spyOn(mockUserRepository, "findOneBy");
+      spyFindOneByFn.mockReturnValue(mockedUser);
 
       // When
       const result = await userService.findUserByEmailAndProvider(email, provider);
 
       // Then
       expect(result).toEqual(mockedUser);
-      expect(userRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email, provider });
+      expect(spyFindOneByFn).toHaveBeenCalledTimes(1);
+      expect(spyFindOneByFn).toHaveBeenCalledWith({ email, provider });
     });
 
     it("should not be found user", async () => {
       // Given
-      userRepository.findOneBy.mockResolvedValue(null);
+      const spyFindOneByFn = jest.spyOn(mockUserRepository, "findOneBy");
+      spyFindOneByFn.mockReturnValue(null);
 
       // When
       const result = await userService.findUserByEmailAndProvider(email, provider);
 
       // Then
       expect(result).toBeNull();
-      expect(userRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(userRepository.findOneBy).toHaveBeenCalledWith({ email, provider });
+      expect(spyFindOneByFn).toHaveBeenCalledTimes(1);
+      expect(spyFindOneByFn).toHaveBeenCalledWith({ email, provider });
     });
   });
 });
