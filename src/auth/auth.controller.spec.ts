@@ -37,4 +37,27 @@ describe("AuthController", () => {
       expect(result).toEqual(expectedResult);
     });
   });
+
+  describe("kakaoLogin()", () => {
+    it("should return token and a value indicating whether it's a new user", async () => {
+      // Given
+      const req = {
+        user: {
+          accessTokenInLocal: "fakeToken",
+          isNew: true,
+        },
+      };
+      const expectedResult = {
+        accessToken: "fakeToken",
+        isNew: true,
+      };
+
+      // When
+      const result = authController.kakaoLogin(req);
+
+      // Then
+      expect(result).toEqual(expectedResult);
+    });
+    13;
+  });
 });
