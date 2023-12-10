@@ -22,6 +22,17 @@ describe("Auth", () => {
           return true;
         },
       })
+      .overrideGuard(AuthGuard("kakao"))
+      .useValue({
+        canActivate: (context: ExecutionContext) => {
+          const request = context.switchToHttp().getRequest();
+          request.user = {
+            accessTokenInLocal: "fakeToken",
+            isNew: true,
+          };
+          return true;
+        },
+      })
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -35,6 +46,15 @@ describe("Auth", () => {
   describe("/auth/naver/login (GET)", () => {
     it("200", () => {
       return request(app.getHttpServer()).get("/auth/naver/login").expect(200).expect({
+        accessToken: "fakeToken",
+        isNew: true,
+      });
+    });
+  });
+
+  describe("/auth/kakao/login (GET)", () => {
+    it("200", () => {
+      return request(app.getHttpServer()).get("/auth/kakao/login").expect(200).expect({
         accessToken: "fakeToken",
         isNew: true,
       });
