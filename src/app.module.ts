@@ -4,8 +4,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
-import { UserModule } from "./user/user.module";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + "/../**/*.entity.{js, ts}"],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     UserModule,

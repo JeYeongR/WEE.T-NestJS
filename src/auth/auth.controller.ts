@@ -13,13 +13,30 @@ export class AuthController {
   }
 
   /**
-   * Test 용 API
+   * Naver Test 용 API
    */
-  // @UseGuards(AuthGuard("naver"))
-  // @Get("/naver")
-  // naverLoginCallback(): void {
-  //   return;
-  // }
+  @UseGuards(AuthGuard("naver"))
+  @Get("/naver")
+  naverLoginTest(): void {
+    return;
+  }
+
+  @UseGuards(AuthGuard("kakao"))
+  @Get("/kakao/login")
+  kakaoLogin(@Req() req): ResponseLoginDto {
+    const { accessTokenInLocal, isNew }: Authentication = req.user;
+
+    return ResponseLoginDto.of(accessTokenInLocal, isNew);
+  }
+
+  /**
+   * Kakao Test 용 API
+   */
+  @UseGuards(AuthGuard("kakao"))
+  @Get("/kakao")
+  kakaoLoginTest(): void {
+    return;
+  }
 }
 
 interface Authentication {
