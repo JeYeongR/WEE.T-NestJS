@@ -1,5 +1,5 @@
 import { Common } from "src/common/common.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity({ name: "health_infos" })
@@ -20,5 +20,6 @@ export class HealthInfo extends Common {
   bodyFat: number;
 
   @ManyToOne(() => User)
+  @JoinColumn({ name: "user_id" })
   user: User;
 }
